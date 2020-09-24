@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+{% block monTitre %}
+    Connexion
+{% endblock %}
+{% block body %}
+    {% if error %}
+        <div class="alert alert-danger">
+            Le nom d'utilisateur et le mot de passe ne correspondent pas.
+        </div>
+    {% endif %}
+    <form action="{{ path("login") }}" method="POST">
+        <div class="form-group">
+            <label>Nom d'utilisateur : </label>
+            <input type="text" required name="_username" class="form-control" value="{{ lastUserName }}">
+        </div>
+        <div class="form-group">
+            <label>Password : </label>
+            <input type="password" required name="_password" class="form-control">
+        </div>
+        <input type="submit" class="btn btn-outline-primary" value="Se connecter">
+    </form>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des voitures{% endblock %}
+{% block monTitre %}
+    Liste des voitures
+{% endblock %}
+{% block body %}
+    {% for msg in app.flashes('success') %}
+        <div class="alert alert-success rounded text-center">
+            {{ msg }}
+        </div>
+    {% endfor %}
+    {{ form_start(form) }}
+        <div class="row no-gutters align-items-center text-center">
+            <div class="col">
+                {{ form_row(form.minAnnee) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.maxAnnee) }}
+            </div>
+
+            <div class="col-2">
+                <input type="submit" value="Rechercher" class="btn btn-outline-primary">
+            </div>
+        </div>
+    {{ form_end(form) }}
+    {% if admin %}
+        <a href="{{ path("creationVoiture") }}" class="d-block btn btn-outline-success">Ajouter</a>
+    {% endif %}
+    <div class="row no-gutters">
+        {% for voiture in voitures %}
+            <div class="col-12 col-lg-6 p-1">
+                <div class="card mb-3">
+                    <div class="row no-gutters align-items-center p-2">
+                        <div class="col-12 col-md-4">
+                            <img src="{{ asset('images/voitures/' ~ voiture.modele.image) }}" alt="" class="card-img">
+                        </div>
+                        <div class="col">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ voiture.immatriculation }}</h5>
+                                <p class="card-text">
+                                <div>Marque : {{ voiture.modele.marque.libelle }}</div>
+                                <div>Modele : {{ voiture.modele.libelle }} - Prix Moyen
+                                    : {{ voiture.modele.prixMoyen }} €</div>
+                                <div>Nombre de portes : {{ voiture.nbPortes }}</div>
+                                <div>Année : {{ voiture.annee }}</div>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    {% if admin %}
+                        <div class="row no-gutters">
+                            <a href="{{ path("modifVoiture", {'id': voiture.id}) }}" class="col btn btn-warning">Modifier</a>
+                            <form action="{{ path("deleteVoiture", {'id': voiture.id}) }}" method="post" class="col" onsubmit="return confirm('Voulez-vous vraiment supprimer ?')">
+                                <input type="hidden" name="_method" value="SUP">
+                                <input type="hidden" name="_token" value="{{ csrf_token('SUP' ~ voiture.id) }}">
+                                <input type="submit" class="btn btn-danger w-100" value="Supprimer">
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="pagination justify-content-center">
+        {{ knp_pagination_render(voitures) }}
+    </div>
+{% endblock %}
